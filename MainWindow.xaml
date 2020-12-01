@@ -5,11 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Advent2020"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <TextBox x:Name="DayBox" HorizontalAlignment="Left" Height="33" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="61" FontFamily="Global Monospace" KeyUp="DayBoxKeyUp"/>
-        <TextBox x:Name="InputBox" HorizontalAlignment="Left" Height="69" Margin="89,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="460" FontFamily="Global Monospace" KeyUp="InputBoxKeyUp"/>
-        <TextBox x:Name="OutputBox" HorizontalAlignment="Left" Height="313" Margin="89,96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="693" FontFamily="Global Monospace"/>
+        Title="MainWindow" Height="631.985" Width="1279.779">
+    <Window.DataContext>
+        <local:MainView/>
+    </Window.DataContext>
+    <Grid Margin="0,0,-23,-31">
+        <TextBox x:Name="InputBox" Height="113" Margin="33,48,656,0" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" KeyUp="InputBoxKeyUp" Grid.Column="1" Text="{Binding InText}"/>
+        <TextBox x:Name="OutputBox" Height="401" Margin="33,181,41,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding OutText}" FontFamily="Global Monospace"/>
+        <TextBox x:Name="DayBox" HorizontalAlignment="Left" Height="30" Margin="10,18,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="74" AcceptsReturn="True" KeyUp="DayBoxKeyUp"/>
 
     </Grid>
 </Window>
