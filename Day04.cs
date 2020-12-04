@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 namespace Advent2020
@@ -79,14 +76,23 @@ namespace Advent2020
                             }
                             break;
                         case "hcl":
-                            Int32.TryParse(DicItem[1].Replace("#", ""), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out Number);
-                            if (Number != )
-                                break;
+                            if (DicItem[1][0] == '#' && DicItem[1].Length == 7)
+                            {
+                                Number = -1;
+                                Int32.TryParse(DicItem[1].Replace("#", ""), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out Number);
+                                if (Number != -1)
+                                    Validness++;
+                            }
+                            break;
                         case "ecl":
-                            ;
+                            string[] Eyes = { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
+                            if (Eyes.Contains(DicItem[1]))
+                                Validness++;
                             break;
                         case "pid":
-                            ;
+                            string pid = Regex.Match(DicItem[1], "\\d+").Value;
+                            if (pid.Length == 9)
+                                Validness++;
                             break;
                         case "cid":
                             ; //sssh
