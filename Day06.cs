@@ -9,11 +9,10 @@ namespace Advent2020
 {
     public class Day06 : Day
     {
-        string[] Instructions;
+        List<string[]> Instructions;
         public Day06(string _input) : base(_input)
         {
-            string clean = _input.Replace("\r\n\r\n", "_").Replace("\r\n", ",");
-            Instructions = this.parseStringArray(clean);
+            Instructions = this.parseListOfStringArrays(_input);
         }
         public override Tuple<string, string> getResult()
         {
@@ -22,13 +21,16 @@ namespace Advent2020
         public string getPartOne()
         {
             int ReturnValue = 0;
-            foreach (string s in Instructions)
+            foreach (string[] g in Instructions)
             {
                 List<char> Answeres = new List<char>();
-                foreach (char c in s)
+                foreach (string s in g)
                 {
-                    if (c != ',' && !Answeres.Contains(c))
-                        Answeres.Add(c);
+                    foreach (char c in s)
+                    {
+                        if (c != ',' && !Answeres.Contains(c))
+                            Answeres.Add(c);
+                    }
                 }
                 ReturnValue += Answeres.Count;
             }
@@ -37,12 +39,7 @@ namespace Advent2020
         public string getPartTwo()
         {
             int ReturnValue = 0;
-            List<string[]> Passengers = new List<string[]>();
-            foreach (string s in Instructions)
-            {
-                Passengers.Add(s.Split(','));
-            }
-            foreach (string[] g in Passengers)
+            foreach (string[] g in Instructions)
             {
                 Dictionary<char, int> Answeres = new Dictionary<char, int>();
                 foreach (string s in g)

@@ -32,11 +32,10 @@ namespace Advent2020
         public List<string[]> parseListOfStringArrays(string input)
         {
             List<string[]> ReturnList = new List<string[]>();
-            string Input = input.Replace("\r\n", "_");
-            string[] RawInstructions = Input.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] RawInstructions = input.Split(new[] { "\r\n\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in RawInstructions)
             {
-                ReturnList.Add(s.Split(' '));
+                ReturnList.Add(s.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
             }
             return ReturnList;
         }
