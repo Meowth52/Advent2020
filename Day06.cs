@@ -23,16 +23,16 @@ namespace Advent2020
             int ReturnValue = 0;
             foreach (string[] g in Instructions)
             {
-                List<char> Answeres = new List<char>();
+                List<char> Answers = new List<char>();
                 foreach (string s in g)
                 {
                     foreach (char c in s)
                     {
-                        if (c != ',' && !Answeres.Contains(c))
-                            Answeres.Add(c);
+                        if (c != ',' && !Answers.Contains(c))
+                            Answers.Add(c);
                     }
                 }
-                ReturnValue += Answeres.Count;
+                ReturnValue += Answers.Count;
             }
             return ReturnValue.ToString();
         }
@@ -41,18 +41,18 @@ namespace Advent2020
             int ReturnValue = 0;
             foreach (string[] g in Instructions)
             {
-                Dictionary<char, int> Answeres = new Dictionary<char, int>();
+                Dictionary<char, int> Answers = new Dictionary<char, int>();
                 foreach (string s in g)
                 {
                     foreach (char c in s)
                     {
-                        if (Answeres.ContainsKey(c))
-                            Answeres[c]++;
+                        if (Answers.ContainsKey(c))
+                            Answers[c]++;
                         else
-                            Answeres.Add(c, 1);
+                            Answers.Add(c, 1);
                     }
                 }
-                foreach (KeyValuePair<char, int> k in Answeres)
+                foreach (KeyValuePair<char, int> k in Answers)
                     if (k.Value == g.Length)
                         ReturnValue++;
             }
