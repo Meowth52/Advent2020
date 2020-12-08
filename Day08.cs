@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace Advent2020
 {
@@ -39,7 +35,7 @@ namespace Advent2020
             List<int> ExecutedCodes = new List<int>();
             while (true) //we where testing infinit loops right?
             {
-                if (i >= code.Count)
+                if (i > code.Count)
                 {
                     EndedWell = true;
                     break;
@@ -70,6 +66,35 @@ namespace Advent2020
         public string getPartTwo()
         {
             int ReturnValue = 0;
+            foreach (KeyValuePair<int, Tuple<string, int>> k in Code)
+            {
+                Dictionary<int, Tuple<string, int>> code = new Dictionary<int, Tuple<string, int>>(Code);
+                bool GetOut = false;
+                string OpCode = k.Value.Item1;
+                switch (OpCode)
+                {
+                    case "acc":
+                        ;
+                        break;
+                    case "jmp":
+                        code[k.Key] = new Tuple<string, int>("nop", k.Value.Item2);
+                        Tuple<int, bool> Attempt = IntMachine(code);
+                        if (Attempt.Item2)
+                        {
+                            ReturnValue = Attempt.Item1;
+                            GetOut = true;
+                        }
+                        break;
+                    case "nop":
+                        code[k.Key] = new Tuple<string, int>("jmp", k.Value.Item2);
+
+                        break;
+                    default:
+                        break;
+                }
+                if (GetOut)
+                    break;
+            }
             return ReturnValue.ToString();
         }
     }
