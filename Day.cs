@@ -39,6 +39,16 @@ namespace Advent2020
             }
             return ReturnList;
         }
+        public List<string[]> parseListOfStringArrays2(string input)
+        {
+            List<string[]> ReturnList = new List<string[]>();
+            string[] RawInstructions = input.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string s in RawInstructions)
+            {
+                ReturnList.Add(s.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+            }
+            return ReturnList;
+        }
         public List<List<int>> parseListOfIntegerLists(string input)
         {
             List<List<int>> ReturnList = new List<List<int>>();
