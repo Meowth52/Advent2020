@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace Advent2020
 {
@@ -22,7 +19,7 @@ namespace Advent2020
         public string getPartOne()
         {
             long ReturnValue = 0;
-            int Lenght = 5;
+            int Lenght = 25;
             Queue<long> Preamble = new Queue<long>();
             Queue<long> DataSet = new Queue<long>();
             int i = 0;
@@ -63,20 +60,34 @@ namespace Advent2020
         {
             long ReturnValue = 0;
             bool GetOut = false;
+            Queue<long> DataSet = new Queue<long>();
             foreach (long l in Instructions)
             {
-                long sum = 0;
+                DataSet.Enqueue(l);
+            }
+            foreach (long l in Instructions)
+            {
+                DataSet.Dequeue();
+                long sum = l;
                 List<long> Range = new List<long>();
-                foreach (long ll in Instructions)
+                Range.Add(l);
+                foreach (long ll in DataSet)
                 {
-                    sum += ll;
-                    Range.Add(ll);
-                    if (sum == Invalid)
+                    if (l != ll)
                     {
-                        GetOut = true;
-                        Range.Sort();
-                        ReturnValue = Range.First() + Range.Last();
-                        break;
+                        sum += ll;
+                        Range.Add(ll);
+                        if (sum == Invalid)
+                        {
+                            Range.Sort();
+                            ReturnValue = Range.First() + Range.Last();
+                            GetOut = true;
+                            break;
+                        }
+                        if (sum >= Invalid)
+                        {
+                            break;
+                        }
                     }
                     if (GetOut)
                         break;
