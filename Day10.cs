@@ -35,7 +35,7 @@ namespace Advent2020
         }
         public string getPartTwo()
         {
-            int ReturnValue = 0;
+            long ReturnValue = 1;
             int Lastest = -20;
             int laster = -10;
             int last = 0;
@@ -46,7 +46,7 @@ namespace Advent2020
                 if (!InSequense && i == last + 1 && last == laster + 1)
                 {
                     InSequense = true;
-                    Sequenses.Add(0);
+                    Sequenses.Add(1);
                 }
                 if (InSequense && i == last + 1)
                 {
@@ -64,6 +64,11 @@ namespace Advent2020
             {
                 NumberSequense.Add(i, NumberSequense[i - 1] + i - 1);
             }
+            foreach (int i in Sequenses)
+            {
+                ReturnValue *= (NumberSequense[i] + 1);
+            }
+
             return ReturnValue.ToString();
         }
     }
