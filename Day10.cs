@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace Advent2020
 {
@@ -40,16 +36,33 @@ namespace Advent2020
         public string getPartTwo()
         {
             int ReturnValue = 0;
-            int Last1 = -20;
-            int last2 = -10;
-            int last3 = 0;
+            int Lastest = -20;
+            int laster = -10;
+            int last = 0;
+            List<int> Sequenses = new List<int>();
+            bool InSequense = false;
             foreach (int i in Instructions)
             {
-                if (i - Last1 <= 3)
-                    ReturnValue++;
-                Last1 = last2;
-                last2 = last3;
-                last3 = i;
+                if (!InSequense && i == last + 1 && last == laster + 1)
+                {
+                    InSequense = true;
+                    Sequenses.Add(0);
+                }
+                if (InSequense && i == last + 1)
+                {
+                    Sequenses[Sequenses.Count - 1]++;
+                }
+                else
+                    InSequense = false;
+                Lastest = laster;
+                laster = last;
+                last = i;
+            }
+            Dictionary<int, int> NumberSequense = new Dictionary<int, int>();
+            NumberSequense.Add(0, 0);
+            for (int i = 1; i <= 100; i++)
+            {
+                NumberSequense.Add(i, NumberSequense[i - 1] + i - 1);
             }
             return ReturnValue.ToString();
         }
