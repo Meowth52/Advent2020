@@ -8,7 +8,7 @@ namespace Advent2020
     {
         string[] Instructions;
         Dictionary<Tuple<int, int>, bool> Area;
-        int[,] AllDirections;
+        Tuple<int,int>[] AllDirections;
         int MaxX;
         int MaxY;
 
@@ -28,7 +28,14 @@ namespace Advent2020
                     }
                 }
             }
-            AllDirections = new int[8, 2] { { 1, -1 }, { 0, 1 }, { 1, 0 }, { 1, 1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 } };
+            AllDirections = new Tuple<int,int>[8] { new Tuple<int, int>( 1, -1 ),
+                                                    new Tuple<int, int>( 0, 1 ),    
+                                                    new Tuple<int, int>( 1, 0 ), 
+                                                    new Tuple<int, int>( 1, 1 ), 
+                                                    new Tuple<int, int>( 0, -1 ),
+                                                    new Tuple<int, int>( -1, -1 ),
+                                                    new Tuple<int, int>( -1, 0 ), 
+                                                    new Tuple<int, int>( -1, 1 ) };
         }
         public override Tuple<string, string> getResult()
         {
@@ -86,16 +93,16 @@ namespace Advent2020
                 foreach (KeyValuePair<Tuple<int, int>, bool> c in Part2Area)
                 {
                     int NumberOfNeighbours = 0;
-                    foreach (Tuple<int, int> d in GetListOfOffsets(c.Key, AllDirections))
+                    foreach (Tuple<int, int> d in AllDirections)
                     {
-                        Tuple<int, int> D = d;
                         int i = 1;
                         while (true)
                         {
+                            Tuple<int, int> D =  this.GetListOfOffsets(c.Key,new Tuple<int, int>[]{new Tuple<int, int>(d.Item1 *i, d.Item2 *i)}).FirstOrDefault();
                             if (D.Item1 < 0 ||
                                 D.Item2 < 0 ||
                                 D.Item1 > MaxX ||
-                                d.Item2 > MaxY)
+                                D.Item2 > MaxY)
                                 break;
                             if (Part2Area.ContainsKey(D))
                             {
@@ -104,7 +111,6 @@ namespace Advent2020
                                 break;
                             }
                             i++;
-                            D = new Tuple<int, int>(D.Item1 + 1, D.Item2 + 1);
                         }
                     }
                     Tuple<int, int> Next = new Tuple<int, int>(c.Key.Item1, c.Key.Item2);
@@ -127,13 +133,13 @@ namespace Advent2020
             }
             return ReturnValue.ToString();
         }
-        public List<Tuple<int, int>> GetListOfOffsets(Tuple<int, int> c, int[,] Offsets)
+        public List<Tuple<int, int>> GetListOfOffsets(Tuple<int, int> c, Tuple<int,int>[] Offsets)
         {
             List<Tuple<int, int>> ReturnList = new List<Tuple<int, int>>();
-            for (int i = 0; i < Offsets.GetLength(0); i++)
+            for (int i = 0; i < Offsets.Length; i++)
             {
-                int _x = c.Item1 + Offsets[i, 0];
-                int _y = c.Item2 + Offsets[i, 1];
+                int _x = c.Item1 + Offsets[i].Item1;
+                int _y = c.Item2 + Offsets[i].Item2;
                 ReturnList.Add(new Tuple<int, int>(_x, _y));
             }
             return ReturnList;
