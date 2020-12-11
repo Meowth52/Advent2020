@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace Advent2020
 {
@@ -20,7 +17,8 @@ namespace Advent2020
             {
                 for (int x = 0; x < Instructions[y].Length; x++)
                 {
-                    Area.Add(x.ToString() + y.ToString(), new ChairMaybe(x, y, Instructions[y][x] == 'L'));
+                    ChairMaybe next = new ChairMaybe(x, y, Instructions[y][x] == 'L'); //I dont thing we need them non chair spaces around here
+                    Area.Add(next.ToString(), next);
                 }
             }
         }
@@ -31,13 +29,39 @@ namespace Advent2020
         public string getPartOne()
         {
             int ReturnValue = 0;
+            int Last = -1;
+            int Iterations = 0;
             while (true)
             {
-                Dictionary<string, ChairMaybe> NextState = new Dictionary<string, ChairMaybe>(Area);
+                Iterations++;
+                ReturnValue = 0;
+                Dictionary<string, ChairMaybe> NextState = new Dictionary<string, ChairMaybe>();
                 foreach (KeyValuePair<string, ChairMaybe> c in Area)
                 {
-                    foreach (string s in c.ge)
+                    if (c.Value.IsChair)
+                    {
+                        int NumberOfNeighbours = 0;
+                        foreach (string s in c.Value.GetAllNeighbourKeys())
+                        {
+                            if (Area.ContainsKey(s) && Area[s].IsOccupied)
+                                NumberOfNeighbours++;
+                        }
+                        ChairMaybe Next = new ChairMaybe(c.Value.x, c.Value.y, c.Value.IsChair);
+                        if (c.Value.IsOccupied)
+                        {
+                            Next.IsOccupied = (NumberOfNeighbours < 4);
+                        }
+                        else
+                            Next.IsOccupied = NumberOfNeighbours == 0;
+                        NextState.Add(Next.ToString(), Next);
+                        if (Next.IsOccupied)
+                            ReturnValue++;
+                    }
                 }
+                if (ReturnValue == Last)
+                    break;
+                Area = new Dictionary<string, ChairMaybe>(NextState);
+                Last = ReturnValue;
             }
             return ReturnValue.ToString();
         }
@@ -66,7 +90,7 @@ namespace Advent2020
             {
                 int _x = x + AllDirections[i, 0];
                 int _y = y + AllDirections[i, 1];
-                ReturnList.Add(x.ToString() + y.ToString());
+                ReturnList.Add(_x.ToString() + "," + _y.ToString());
             }
             return ReturnList;
         }
