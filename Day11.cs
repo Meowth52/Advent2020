@@ -7,20 +7,28 @@ namespace Advent2020
     public class Day11 : Day
     {
         string[] Instructions;
-        Dictionary<string, ChairMaybe> Area;
+        Dictionary<Tuple<int, int>, bool> Area;
+        int[,] AllDirections;
+        int MaxX;
+        int MaxY;
 
         public Day11(string _input) : base(_input)
         {
             Instructions = this.parseStringArray(_input);
-            Area = new Dictionary<string, ChairMaybe>();
+            Area = new Dictionary<Tuple<int, int>, bool>();
+            MaxX = Instructions[0].Length - 1;
+            MaxY = Instructions.Count() - 1;
             for (int y = 0; y < Instructions.Count(); y++)
             {
                 for (int x = 0; x < Instructions[y].Length; x++)
                 {
-                    ChairMaybe next = new ChairMaybe(x, y, Instructions[y][x] == 'L'); //I dont thing we need them non chair spaces around here
-                    Area.Add(next.ToString(), next);
+                    if (Instructions[y][x] == 'L')
+                    {
+                        Area.Add(new Tuple<int, int>(x, y), false);
+                    }
                 }
             }
+            AllDirections = new int[8, 2] { { 1, -1 }, { 0, 1 }, { 1, 0 }, { 1, 1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 } };
         }
         public override Tuple<string, string> getResult()
         {
@@ -31,36 +39,35 @@ namespace Advent2020
             int ReturnValue = 0;
             int Last = -1;
             int Iterations = 0;
+            Dictionary<Tuple<int, int>, bool> Part1Area = new Dictionary<Tuple<int, int>, bool>(Area);
             while (true)
             {
                 Iterations++;
                 ReturnValue = 0;
-                Dictionary<string, ChairMaybe> NextState = new Dictionary<string, ChairMaybe>();
-                foreach (KeyValuePair<string, ChairMaybe> c in Area)
+                Dictionary<Tuple<int, int>, bool> NextState = new Dictionary<Tuple<int, int>, bool>();
+                foreach (KeyValuePair<Tuple<int, int>, bool> c in Part1Area)
                 {
-                    if (c.Value.IsChair)
+                    int NumberOfNeighbours = 0;
+                    foreach (Tuple<int, int> d in GetListOfOffsets(c.Key, AllDirections))
                     {
-                        int NumberOfNeighbours = 0;
-                        foreach (string s in c.Value.GetAllNeighbourKeys())
-                        {
-                            if (Area.ContainsKey(s) && Area[s].IsOccupied)
-                                NumberOfNeighbours++;
-                        }
-                        ChairMaybe Next = new ChairMaybe(c.Value.x, c.Value.y, c.Value.IsChair);
-                        if (c.Value.IsOccupied)
-                        {
-                            Next.IsOccupied = (NumberOfNeighbours < 4);
-                        }
-                        else
-                            Next.IsOccupied = NumberOfNeighbours == 0;
-                        NextState.Add(Next.ToString(), Next);
-                        if (Next.IsOccupied)
-                            ReturnValue++;
+                        if (Part1Area.ContainsKey(d) && Part1Area[d])
+                            NumberOfNeighbours++;
                     }
+                    Tuple<int, int> Next = new Tuple<int, int>(c.Key.Item1, c.Key.Item2);
+                    bool IsOccupied = false;
+                    if (c.Value)
+                    {
+                        IsOccupied = (NumberOfNeighbours < 4);
+                    }
+                    else
+                        IsOccupied = NumberOfNeighbours == 0;
+                    NextState.Add(Next, IsOccupied);
+                    if (IsOccupied)
+                        ReturnValue++;
                 }
                 if (ReturnValue == Last)
                     break;
-                Area = new Dictionary<string, ChairMaybe>(NextState);
+                Part1Area = new Dictionary<Tuple<int, int>, bool>(NextState);
                 Last = ReturnValue;
             }
             return ReturnValue.ToString();
@@ -68,29 +75,66 @@ namespace Advent2020
         public string getPartTwo()
         {
             int ReturnValue = 0;
+            int Last = -1;
+            int Iterations = 0;
+            Dictionary<Tuple<int, int>, bool> Part2Area = new Dictionary<Tuple<int, int>, bool>(Area);
+            while (true)
+            {
+                Iterations++;
+                ReturnValue = 0;
+                Dictionary<Tuple<int, int>, bool> NextState = new Dictionary<Tuple<int, int>, bool>();
+                foreach (KeyValuePair<Tuple<int, int>, bool> c in Part2Area)
+                {
+                    int NumberOfNeighbours = 0;
+                    foreach (Tuple<int, int> d in GetListOfOffsets(c.Key, AllDirections))
+                    {
+                        Tuple<int, int> D = d;
+                        int i = 1;
+                        while (true)
+                        {
+                            if (D.Item1 < 0 ||
+                                D.Item2 < 0 ||
+                                D.Item1 > MaxX ||
+                                d.Item2 > MaxY)
+                                break;
+                            if (Part2Area.ContainsKey(D))
+                            {
+                                if (Part2Area[D])
+                                    NumberOfNeighbours++;
+                                break;
+                            }
+                            i++;
+                            D = new Tuple<int, int>(D.Item1 + 1, D.Item2 + 1);
+                        }
+                    }
+                    Tuple<int, int> Next = new Tuple<int, int>(c.Key.Item1, c.Key.Item2);
+                    bool IsOccupied = false;
+                    if (c.Value)
+                    {
+                        IsOccupied = (NumberOfNeighbours < 5);
+                    }
+                    else
+                        IsOccupied = NumberOfNeighbours == 0;
+                    NextState.Add(Next, IsOccupied);
+                    if (IsOccupied)
+                        ReturnValue++;
+                }
+                if (ReturnValue == Last)
+                    break;
+                Part2Area = new Dictionary<Tuple<int, int>, bool>(NextState);
+                Last = ReturnValue;
+                ;
+            }
             return ReturnValue.ToString();
         }
-    }
-    public class ChairMaybe : Coordinate
-    {
-        public bool IsChair;
-        public bool IsOccupied;
-        int[,] AllDirections = new int[8, 2] { { 1, -1 }, { 0, 1 }, { 1, 0 }, { 1, 1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 } };
-        public ChairMaybe(int x, int y, bool isChair) : base(x, y)
+        public List<Tuple<int, int>> GetListOfOffsets(Tuple<int, int> c, int[,] Offsets)
         {
-            this.x = x;
-            this.y = y;
-            IsChair = isChair;
-            IsOccupied = false;
-        }
-        public List<string> GetAllNeighbourKeys() //Use hashcode instead?
-        {
-            List<string> ReturnList = new List<string>();
-            for (int i = 0; i < 8; i++)
+            List<Tuple<int, int>> ReturnList = new List<Tuple<int, int>>();
+            for (int i = 0; i < Offsets.GetLength(0); i++)
             {
-                int _x = x + AllDirections[i, 0];
-                int _y = y + AllDirections[i, 1];
-                ReturnList.Add(_x.ToString() + "," + _y.ToString());
+                int _x = c.Item1 + Offsets[i, 0];
+                int _y = c.Item2 + Offsets[i, 1];
+                ReturnList.Add(new Tuple<int, int>(_x, _y));
             }
             return ReturnList;
         }
