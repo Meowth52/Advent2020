@@ -17,38 +17,30 @@ namespace Advent2020
             x = c.x;
             y = c.y;
         }
-        public Coordinate()
-        {
-
-        }
-        public bool IsOn(Coordinate c)
-        {
-            return (c.x == this.x && c.y == this.y);
-        }
         public void AddTo(Coordinate A)
         {
             x += A.x;
             y += A.y;
         }
-        public void MoveOneStep(char c)
+        public void MoveNSteps(char c, int n = 1)
         {
             switch (c)
             {
                 case 'E':
                 case 'R':
-                    this.AddTo(new Coordinate(0, 1));
+                    this.AddTo(new Coordinate(1 * n, 0));
                     break;
                 case 'W':
                 case 'L':
-                    this.AddTo(new Coordinate(0, -1));
+                    this.AddTo(new Coordinate(-1 * n, 0));
                     break;
                 case 'N':
                 case 'U':
-                    this.AddTo(new Coordinate(1, 0));
+                    this.AddTo(new Coordinate(0, 1 * n));
                     break;
                 case 'S':
                 case 'D':
-                    this.AddTo(new Coordinate(-1, 0));
+                    this.AddTo(new Coordinate(0, -1 * n));
                     break;
             }
         }
