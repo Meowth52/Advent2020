@@ -67,7 +67,6 @@ namespace Advent2020
         {
             int ReturnValue = 0;
             Coordinate Ferry = new Coordinate(0, 0);
-            char Direction = 'E';
             Coordinate Waypoint = new Coordinate(10, 1);
             List<char> Directions = new List<char> { 'E', 'S', 'W', 'N' };
             foreach (Tuple<char, int> t in Instructions)

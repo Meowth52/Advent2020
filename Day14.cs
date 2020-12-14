@@ -8,6 +8,7 @@ namespace Advent2020
     {
         string[] Instructions;
         Dictionary<int, long> Memory;
+        List<DataSet> Sets = new List<DataSet>();
 
         public Day14(string _input) : base(_input)
         {
@@ -21,7 +22,6 @@ namespace Advent2020
         public string getPartOne()
         {
             long ReturnValue = 0;
-            List<DataSet> Sets = new List<DataSet>();
             foreach (string s in Instructions)
             {
                 Sets.Add(new DataSet(s));
@@ -38,7 +38,11 @@ namespace Advent2020
         }
         public string getPartTwo()
         {
-            int ReturnValue = 0;
+            long ReturnValue = 0;
+            foreach (DataSet s in Sets)
+            {
+                ReturnValue += s.FLoatingSum();
+            }
             return ReturnValue.ToString();
         }
     }
@@ -95,6 +99,40 @@ namespace Advent2020
                 else
                     Memory.Add(t.Item1, masked);
             }
+        }
+        public FLoatingSum()
+        {
+            long ReturnValue = 0;
+            foreach (Tuple<int, int> t in Values)
+            {
+                string ValueString = Convert.ToString(t.Item2, 2);
+                ValueString = ValueString.PadLeft(36, '0');
+                double Maskedvalue = 0;
+                int HighestValue = 0;
+                for (int i = 0; i < Mask.Length; i++)
+                {
+                    int inv = Mask.Length - (i + 1);
+                    string switch_on = ValueString[inv].ToString() + Mask[inv].ToString();
+                    switch (switch_on)
+                    {
+                        case "00":
+                            break;
+                        case "0X":
+                        case "1X":
+                            Maskedvalue += Math.Pow(2, i) / 2;
+                            HighestValue++;
+                            break;
+                        case "11":
+                        case "01":
+                            Maskedvalue += Math.Pow(2, i);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                ReturnValue += (long)Maskedvalue * (int)Math.Pow(2, HighestValue);
+            }
+            return ReturnValue;
         }
     }
 

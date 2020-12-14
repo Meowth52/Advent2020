@@ -41,15 +41,18 @@ namespace Advent2020
         {
             long ReturnValue = 0;
             Instructions2.RemoveAt(0);
-            long Depart = 100000000000000;
+            int Largest = 0;
+            foreach (int i in Instructions2)
+                if (i > Largest)
+                    Largest = i;
+            long Depart = 0;
             while (true)
             {
-                int Last = 0;
+                int Last = 1;
                 bool Yes = true;
                 long WaitingTime = 0;
                 foreach (int i in Instructions2)
                 {
-                    Last++;
                     if (i != -1)
                     {
                         WaitingTime = i - (Depart % i);
@@ -61,14 +64,14 @@ namespace Advent2020
                         else
                             ;
                     }
+                    Last++;
                 }
                 if (Yes)
                 {
                     ReturnValue = Depart + 1;
                     break;
                 }
-
-                Depart++;
+                Depart += Largest;
             }
             return ReturnValue.ToString();
         }
