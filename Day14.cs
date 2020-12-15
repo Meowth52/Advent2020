@@ -128,7 +128,7 @@ namespace Advent2020
                             int count = Adresses.Count;
                             for (int a = 0; a < count; a++)
                             {
-                                Adresses.Add((ulong)a);
+                                Adresses.Add((ulong)Adresses[a]);
                                 Adresses[a] += (ulong)Math.Pow(2, i);
                             }
                             break;
@@ -145,10 +145,7 @@ namespace Advent2020
                 {
                     Memory[l + Solid] = t.Item2;
                 }
-                ;
             }
-            ;
         }
     }
-
 }
