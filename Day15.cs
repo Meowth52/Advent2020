@@ -33,8 +33,7 @@ namespace Advent2020
                     Spoken.Add(Last, new Queue<int>(new int[] { }));
                 if (Spoken[Last].Count > 1)
                 {
-                    int popped = Spoken[Last].Dequeue();
-                    ReturnValue = Last - Spoken[Last].Peek();
+                    ReturnValue = (Turn - 1) - Spoken[Last].Dequeue();
                 }
                 else
                     ReturnValue = 0;
