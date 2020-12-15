@@ -17,31 +17,34 @@ namespace Advent2020
         public string getPartOne()
         {
             int ReturnValue = 0;
-            Dictionary<int, int> Spoken = new Dictionary<int, int>();
+            Dictionary<int, Queue<int>> Spoken = new Dictionary<int, Queue<int>>();
             int Turn = 1;
             int Last = 0;
             foreach (int i in Instructions)
             {
-                Spoken.Add(i, 0);
+                Spoken.Add(i, new Queue<int>(new int[] { Turn }));
                 Last = i;
                 Turn++;
             }
             ;
             while (Turn <= 2020)
             {
-                if (Spoken.ContainsKey(Last) && Spoken[Last] > 0)
+                if (!Spoken.ContainsKey(Last))
+                    Spoken.Add(Last, new Queue<int>(new int[] { }));
+                if (Spoken[Last].Count > 1)
                 {
-                    ReturnValue = Turn - Spoken[Last];
-                    Spoken[Last] = Turn;
-                }
-                else if (!Spoken.ContainsKey(Last))
-                {
-                    Spoken[Last] = 0;
-                    ReturnValue = 0;
+                    int popped = Spoken[Last].Dequeue();
+                    ReturnValue = Last - Spoken[Last].Peek();
                 }
                 else
-                    Spoken[Last] = Turn;
+                    ReturnValue = 0;
+                if (Turn != Instructions.Count)
+                    Spoken[Last].Enqueue(Turn);
+                if (Spoken[Last].Count > 2)
+                    Spoken[Last].Dequeue();
+
                 Last = ReturnValue;
+
                 Turn++;
             }
             ReturnValue = Last;
