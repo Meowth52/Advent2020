@@ -12,44 +12,41 @@ namespace Advent2020
         }
         public override Tuple<string, string> getResult()
         {
-            return Tuple.Create(getPartOne(), getPartTwo());
+            return Tuple.Create(getPartOne(2020), getPartOne(30000000));
         }
-        public string getPartOne()
+        public string getPartOne(int BigNumber)
         {
             int ReturnValue = 0;
-            Dictionary<int, Queue<int>> Spoken = new Dictionary<int, Queue<int>>();
+            Dictionary<int, int> Spoken = new Dictionary<int, int>();
             int Turn = 1;
-            int Last = 0;
+            int LastSpoken = 0;
+            int NextNumber = 0;
             foreach (int i in Instructions)
             {
-                Spoken.Add(i, new Queue<int>(new int[] { Turn }));
-                Last = i;
+                Spoken.Add(i, Turn);
+                LastSpoken = i;
                 Turn++;
             }
             ;
-            while (Turn <= 2020)
+            while (Turn <= BigNumber)
             {
-                if (!Spoken.ContainsKey(Last))
-                    Spoken.Add(Last, new Queue<int>(new int[] { }));
-                if (Spoken[Last].Count > 1)
+                if (!Spoken.ContainsKey(LastSpoken))
+                    Spoken.Add(LastSpoken, 0);
+                if (Spoken[LastSpoken] > 0 && Turn != Instructions.Count + 1)
                 {
-                    ReturnValue = (Turn - 1) - Spoken[Last].Dequeue();
+                    NextNumber = (Turn - 1) - Spoken[LastSpoken];
                 }
                 else
-                    ReturnValue = 0;
-                if (Turn != Instructions.Count)
-                    Spoken[Last].Enqueue(Turn);
-                if (Spoken[Last].Count > 2)
-                    Spoken[Last].Dequeue();
-
-                Last = ReturnValue;
-
+                    NextNumber = 0;
+                if (Turn != Instructions.Count + 1)
+                    Spoken[LastSpoken] = Turn - 1;
+                LastSpoken = NextNumber;
                 Turn++;
             }
-            ReturnValue = Last;
+            ReturnValue = LastSpoken;
             return ReturnValue.ToString();
         }
-        public string getPartTwo()
+        public string getPartTwo() //Nope
         {
             int ReturnValue = 0;
             return ReturnValue.ToString();
