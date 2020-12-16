@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 namespace Advent2020
@@ -64,7 +61,8 @@ namespace Advent2020
                     Int32.TryParse(m.Value, out ParseInt);
                     IntList.Add(ParseInt);
                 }
-                ReturnList.Add(IntList);
+                if (IntList.Count > 0)
+                    ReturnList.Add(IntList);
             }
             return ReturnList;
         }
