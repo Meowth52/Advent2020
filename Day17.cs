@@ -39,9 +39,10 @@ namespace Advent2020
                             List<Cooordinate> Neigbhours2 = c.GetNeihbours();
                             int Cubes2 = 0;
                             bool NextState2 = false;
-                            if (c == new Cooordinate(0, 2, 1))
+                            Cooordinate b = new Cooordinate(0, 2, 1);
+                            if (c.Equals(b))
                                 ;
-                            foreach (Cooordinate c2 in Neigbhours)
+                            foreach (Cooordinate c2 in Neigbhours2)
                             {
 
                                 if (Grid.ContainsKey(c2) && Grid[c2])
