@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace Advent2020
 {
@@ -27,7 +23,7 @@ namespace Advent2020
                 string Mutable = s;
                 while (true)
                 {
-                    MatchCollection Matches = Regex.Matches(Mutable, @"\(([^\)]+)\)");
+                    MatchCollection Matches = Regex.Matches(Mutable, @"\(([^\()]+?)\)");
                     if (Matches.Count == 0)
                     {
                         ReturnValue += SumFromString(Mutable);
@@ -51,12 +47,12 @@ namespace Advent2020
             string[] Strings = s.Replace("(", "").Replace(")", "").Split(' ');
             bool Odd = true;
             string Operator = "";
-            int Now = 0;
+            long Now = 0;
             foreach (string st in Strings)
             {
                 if (Odd)
                 {
-                    Now = Int32.Parse(st);
+                    Now = Int64.Parse(st);
                     if (ReturnValue == 0)
                     {
                         ReturnValue = Now;
