@@ -32,11 +32,34 @@ namespace Advent2020
         public string getPartOne()
         {
             int ReturnValue = 0;
-            while (true)
+            while (Deck1.Count > 0 && Deck2.Count > 0)
             {
+                int PlayerOneCard = Deck1.Dequeue();
+                int PlayerTwoCard = Deck2.Dequeue();
+                if (PlayerOneCard > PlayerTwoCard)
+                {
+                    Deck1.Enqueue(PlayerOneCard);
+                    Deck1.Enqueue(PlayerTwoCard);
+                }
+                else
+                {
+                    Deck2.Enqueue(PlayerTwoCard);
+                    Deck2.Enqueue(PlayerOneCard);
+                }
 
             }
+            ReturnValue = CountScore(Deck1.Count > 0 ? Deck1 : Deck2);
             return ReturnValue.ToString();
+        }
+        public int CountScore(Queue<int> Deck)
+        {
+            int ReturnValue = 0;
+            for (int i = Deck.Count; i >= 1; i--)
+            {
+                ReturnValue += Deck.Dequeue() * i;
+            }
+            return ReturnValue;
+
         }
         public string getPartTwo()
         {
