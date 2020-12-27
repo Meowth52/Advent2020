@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Advent2020
@@ -16,6 +17,23 @@ namespace Advent2020
             this._mainView = mainView;
         }
         public abstract Tuple<string, string> getResult();
+        public string CheckFile(string _input)
+        {
+            string Input = "";
+            if (String.IsNullOrWhiteSpace(_input))
+            {
+                if (File.Exists("Input.txt"))
+                {
+                    Input = File.ReadAllText("Input.txt");
+                }
+            }
+            else
+            {
+                File.WriteAllText("Input.txt", _input);
+                Input = _input;
+            }
+            return Input;
+        }
 
         public string parseJustOneLine(string input)
         {
