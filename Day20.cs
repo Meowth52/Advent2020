@@ -60,7 +60,7 @@ namespace Advent2020
     }
     public class Square
     {
-        public List<int> Sides;
+        public List<int> Sides; //top,down,left,right
         public List<int> AntiSides;
         public char[,] Content;
         int Size;
@@ -101,6 +101,42 @@ namespace Advent2020
                 }
                 AntiSides.Add(Convert.ToInt32(NextS, 2));
             }
+        }
+        public void Turn() //Dont forget to invert
+        {
+            char[,] New = new char[Size, Size];
+            for (int y = 0; y < Size; y++)
+            {
+                for (int x = 0; x < Size; x++)
+                {
+                    New[x, y] = Content[y, x];
+                }
+            }
+            Content = New;
+        }
+        public void InvertX()
+        {
+            char[,] New = new char[Size, Size];
+            for (int y = 0; y < Size; y++)
+            {
+                for (int x = 0; x < Size; x++)
+                {
+                    New[x, y] = Content[Size - x, y];
+                }
+            }
+            Content = New;
+        }
+        public void InvertY()
+        {
+            char[,] New = new char[Size, Size];
+            for (int y = 0; y < Size; y++)
+            {
+                for (int x = 0; x < Size; x++)
+                {
+                    New[x, y] = Content[x, Size - y];
+                }
+            }
+            Content = New;
         }
     }
 }
