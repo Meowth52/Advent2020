@@ -12,7 +12,8 @@ namespace Advent2020
         Dictionary<int, Square> Squares;
         public Day20(string _input) : base(_input)
         {
-            string[] splitted = _input.Split(new[] { "\r\n\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string Input = this.CheckFile(_input);
+            string[] splitted = Input.Split(new[] { "\r\n\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             Squares = new Dictionary<int, Square>();
             foreach (string s in splitted)
             {
@@ -76,6 +77,15 @@ namespace Advent2020
             input = input.Replace(".", "0").Replace("#", "1");
             string[] splitted = input.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             List<string> SideStrings = new List<string>();
+            Size = splitted.Length - 2;
+            Content = new char[Size, Size];
+            for (int y = 1; y < splitted.Length - 1; y++)
+            {
+                for (int x = 1; x < splitted.Length - 1; x++)
+                {
+                    Content[x - 1, y - 1] = splitted[y][x];
+                }
+            }
             SideStrings.Add(splitted[0]);
             SideStrings.Add(splitted.Last());
             string l = "";
@@ -97,6 +107,42 @@ namespace Advent2020
                 }
                 AntiSides.Add(Convert.ToInt32(NextS, 2), 0);
             }
+        }
+        public void Turn() //Dont forget to invert
+        {
+            char[,] New = new char[Size, Size];
+            for (int y = 0; y < Size; y++)
+            {
+                for (int x = 0; x < Size; x++)
+                {
+                    New[x, y] = Content[y, x];
+                }
+            }
+            Content = New;
+        }
+        public void InvertX()
+        {
+            char[,] New = new char[Size, Size];
+            for (int y = 0; y < Size; y++)
+            {
+                for (int x = 0; x < Size; x++)
+                {
+                    New[x, y] = Content[Size - x, y];
+                }
+            }
+            Content = New;
+        }
+        public void InvertY()
+        {
+            char[,] New = new char[Size, Size];
+            for (int y = 0; y < Size; y++)
+            {
+                for (int x = 0; x < Size; x++)
+                {
+                    New[x, y] = Content[x, Size - y];
+                }
+            }
+            Content = New;
         }
     }
 }
