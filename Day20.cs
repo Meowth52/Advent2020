@@ -43,7 +43,7 @@ namespace Advent2020
                 {
                     if (s.Key != s2.Key)
                     {
-                        foreach (int side in s.Value.Sides.Keys)
+                        foreach (int side in s.Value.Sides)
                         {
                             if (s2.Value.Sides.Contains(side) || s2.Value.AntiSides.Contains(side))
                             {
@@ -134,8 +134,8 @@ namespace Advent2020
         int Size;
         public Square(string input)
         {
-            Sides = new Dictionary<int, int>();
-            AntiSides = new Dictionary<int, int>();
+            Sides = new List<int>();
+            AntiSides = new List<int>();
             input = input.Replace(".", "0").Replace("#", "1");
             string[] splitted = input.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             List<string> SideStrings = new List<string>();
@@ -161,13 +161,13 @@ namespace Advent2020
             SideStrings.Add(r);
             foreach (string s in SideStrings)
             {
-                Sides.Add(Convert.ToInt32(s, 2), 0);
+                Sides.Add(Convert.ToInt32(s, 2));
                 string NextS = "";
                 for (int i = s.Length - 1; i >= 0; i--)
                 {
                     NextS += s[i];
                 }
-                AntiSides.Add(Convert.ToInt32(NextS, 2), 0);
+                AntiSides.Add(Convert.ToInt32(NextS, 2));
             }
         }
         public void Turn() //Dont forget to invert
