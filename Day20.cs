@@ -72,35 +72,65 @@ namespace Advent2020
                 if (Corners[Current][i])
                     Directions.Add(i);
             }
+            switch (Directions[0]) //top,down,left,right
+            {
+                case 0://top
+                    Squares[Current].Turn();
+                    break;
+                case 1://down
+                    Squares[Current].Turn();
+                    Squares[Current].Turn();
+                    Squares[Current].Turn();
+                    break;
+                case 2://left
+                    Squares[Current].Turn();
+                    Squares[Current].Turn();
+                    break;
+                case 3://right
+                    ;
+                    break;
+                default:
+                    break;
+            }//Well now I need to find out if I need to flip it
+            int Shore = 0;
             while (true)
             {
                 int side = Squares[Current].Sides[Directions[0]];
-                //match first direction and fill the sea if no match go to second direction
-            }
-            foreach (KeyValuePair<int, Square> s in Squares)
-            {
-                foreach (KeyValuePair<int, Square> s2 in Squares)
+                int ContentLenght = Squares[Current].Content.GetLength(0);
+                for (int i = 0; i < ContentLenght; i++)
                 {
-                    if (s.Key != s2.Key)
+                    if (Sea.Count <= Shore + i)
+                        Sea.Add(new List<char>());
+                    for (int ii = 0; ii < ContentLenght; ii++)
+                        Sea[Shore + i].Add(Squares[Current].Content.[i, ii]);
+                }
+                foreach (KeyValuePair<int, Square> s in Squares)
+                {
+                    if (s.Key != Current)
                     {
                         for (int i = 0; i < 4; i++)
                         {
-                            int side = s.Value.Sides[i];
-                            if (s2.Value.Sides.Contains(side) || s2.Value.AntiSides.Contains(side))
+                            if (s.Value.Sides[i] == side || s.Value.AntiSides[i] == side)
                             {
-                                switch (i)
+                                switch (i) //top,down,left,right
                                 {
-                                    case 3://right
-                                        s.Value.MatchRight = s2.Key;
+                                    case 0://top
+                                        s.Value.Turn();
                                         break;
                                     case 1://down
-                                        s.Value.MatchDown = s2.Key;
+                                        s.Value.Turn();
+                                        break;
+                                    case 2://left
+                                        s.Value.Turn();
+                                        break;
+                                    case 3://right
+                                        s.Value.Turn();
                                         break;
                                     default:
                                         break;
                                 }
                             }
-                            if (s2.Value.AntiSides.Contains(side))
+                            if (s.Value.AntiSides[i] == side)
                             {
                                 switch (i)
                                 {
@@ -117,6 +147,7 @@ namespace Advent2020
                         }
                     }
                 }
+                //match first direction and fill the sea if no match go to second direction
             }
 
             return ReturnValue.ToString();
