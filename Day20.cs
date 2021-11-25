@@ -65,91 +65,122 @@ namespace Advent2020
         {
             int ReturnValue = 0;
             List<List<char>> Sea = new List<List<char>>();
-            int Current = Corners.First().Key;
+            KeyValuePair<int, Square> Current = new KeyValuePair<int, Square>(Corners.First().Key, Squares[Corners.First().Key]);
             List<int> Directions = new List<int>();
             for (int i = 0; i < 4; i++)
             {
-                if (Corners[Current][i])
+                if (Corners[Current.Key][i])
                     Directions.Add(i);
             }
             switch (Directions[0]) //top,down,left,right
             {
                 case 0://top
-                    Squares[Current].Turn();
+                    Squares[Current.Key].Turn();
+                    if (Directions[1] == 2)
+                        Squares[Current.Key].InvertY();
                     break;
                 case 1://down
-                    Squares[Current].Turn();
-                    Squares[Current].Turn();
-                    Squares[Current].Turn();
+                    Squares[Current.Key].Turn();
+                    Squares[Current.Key].Turn();
+                    Squares[Current.Key].Turn();
+                    if (Directions[1] == 3)
+                        Squares[Current.Key].InvertY();
                     break;
                 case 2://left
-                    Squares[Current].Turn();
-                    Squares[Current].Turn();
+                    Squares[Current.Key].Turn();
+                    Squares[Current.Key].Turn();
+                    if (Directions[1] == 1)
+                        Squares[Current.Key].InvertY();
                     break;
                 case 3://right
                     ;
+                    if (Directions[1] == 0)
+                        Squares[Current.Key].InvertY();
                     break;
                 default:
                     break;
-            }//Well now I need to find out if I need to flip it
+            }
+            Directions = new List<int> { 3, 1 };
             int Shore = 0;
+            int SquaresMatched = 0;
+            int ContentLenght = Current.Value.Content.GetLength(0);
             while (true)
             {
-                int side = Squares[Current].Sides[Directions[0]];
-                int ContentLenght = Squares[Current].Content.GetLength(0);
                 for (int i = 0; i < ContentLenght; i++)
                 {
                     if (Sea.Count <= Shore + i)
                         Sea.Add(new List<char>());
                     for (int ii = 0; ii < ContentLenght; ii++)
-                        Sea[Shore + i].Add(Squares[Current].Content.[i, ii]);
+                        Sea[Shore + i].Add(Current.Value.Content[i, ii]);
                 }
-                foreach (KeyValuePair<int, Square> s in Squares)
+                Dictionary<int, Square> Next = new Dictionary<int, Square>(Squares);
+                bool Match = false;
+                for (int n = 0; n < 2; n++)
                 {
-                    if (s.Key != Current)
+                    int side = Current.Value.Sides[Directions[n]];
+                    foreach (KeyValuePair<int, Square> s in Squares)
                     {
-                        for (int i = 0; i < 4; i++)
+                        if (s.Key != Current.Key)
                         {
-                            if (s.Value.Sides[i] == side || s.Value.AntiSides[i] == side)
+                            for (int i = 0; i < 4; i++)
                             {
-                                switch (i) //top,down,left,right
+                                if (s.Value.Sides[i] == side || s.Value.AntiSides[i] == side)
                                 {
-                                    case 0://top
-                                        s.Value.Turn();
-                                        break;
-                                    case 1://down
-                                        s.Value.Turn();
-                                        break;
-                                    case 2://left
-                                        s.Value.Turn();
-                                        break;
-                                    case 3://right
-                                        s.Value.Turn();
-                                        break;
-                                    default:
-                                        break;
+                                    Match = true;
+                                    switch (i) //top,down,left,right
+                                    {
+                                        case 0://top
+                                            s.Value.Turn();
+                                            s.Value.Turn();
+                                            s.Value.Turn();
+                                            break;
+                                        case 1://down
+                                            s.Value.Turn();
+                                            break;
+                                        case 2://left
+                                            s.Value.Turn();
+                                            break;
+                                        case 3://right
+                                            s.Value.Turn();
+                                            s.Value.Turn();
+                                            break;
+                                        default:
+                                            break;
+                                    }
                                 }
-                            }
-                            if (s.Value.AntiSides[i] == side)
-                            {
-                                switch (i)
+                                if (s.Value.AntiSides[i] == side)
                                 {
-                                    case 3://right
-                                        s.Value.InvertRight = true;
-                                        break;
-                                    case 1://down
-                                        s.Value.InvertDown = true;
-                                        break;
-                                    default:
-                                        break;
+                                    s.Value.InvertY();
                                 }
                             }
                         }
+                        if (Match)
+                        {
+                            Next.Remove(s.Key);
+                            Current = s;
+                            SquaresMatched++;
+                            if (n == 1)
+                                Shore += ContentLenght;
+                            break;
+                        }
                     }
-                }
-                //match first direction and fill the sea if no match go to second direction
-            }
+                    if (Match)
+                        break;
 
+                }
+                if (!Match)
+                {
+                    for (int i = 0; i < ContentLenght; i++)
+                    {
+                        if (Sea.Count <= Shore + i)
+                            Sea.Add(new List<char>());
+                        for (int ii = 0; ii < ContentLenght; ii++)
+                            Sea[Shore + i].Add(Current.Value.Content[i, ii]);
+                    }
+                    break;
+                }
+                Squares = new Dictionary<int, Square>(Next);
+            }
             return ReturnValue.ToString();
         }
     }
@@ -214,17 +245,17 @@ namespace Advent2020
             Content = New;
             List<int> NewSides = new List<int>()
             {
-                AntiSides[2],
-                Sides[0],
-                AntiSides[3],
-                Sides[1]
-            }; //top,down,left,right
-            List<int> NewAntiSides = new List<int>()
-            {
                 Sides[2],
                 AntiSides[0],
                 Sides[3],
                 AntiSides[1]
+            }; //top,down,left,right
+            List<int> NewAntiSides = new List<int>()
+            {
+                AntiSides[2],
+                Sides[0],
+                AntiSides[3],
+                Sides[1]
             };
             Sides = new List<int>(NewSides);
             AntiSides = new List<int>(NewAntiSides);
