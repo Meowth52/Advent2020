@@ -72,33 +72,9 @@ namespace Advent2020
                 if (Corners[Current.Key][i])
                     Directions.Add(i);
             }
-            switch (Directions[0]) //top,down,left,right
+            for (int i = Directions[0]; i > 0; i--) //right,down,left,upp               Keep replacing the switches with something like this
             {
-                case 0://top
-                    Squares[Current.Key].Turn();
-                    if (Directions[1] == 2)
-                        Squares[Current.Key].InvertY();
-                    break;
-                case 1://down
-                    Squares[Current.Key].Turn();
-                    Squares[Current.Key].Turn();
-                    Squares[Current.Key].Turn();
-                    if (Directions[1] == 3)
-                        Squares[Current.Key].InvertY();
-                    break;
-                case 2://left
-                    Squares[Current.Key].Turn();
-                    Squares[Current.Key].Turn();
-                    if (Directions[1] == 1)
-                        Squares[Current.Key].InvertY();
-                    break;
-                case 3://right
-                    ;
-                    if (Directions[1] == 0)
-                        Squares[Current.Key].InvertY();
-                    break;
-                default:
-                    break;
+                Squares[Current.Key].Turn();
             }
             Directions = new List<int> { 3, 1 };
             int Shore = 0;
@@ -124,31 +100,54 @@ namespace Advent2020
                         {
                             for (int i = 0; i < 4; i++)
                             {
+                                bool Anti = false;
                                 if (s.Value.Sides[i] == side || s.Value.AntiSides[i] == side)
                                 {
+                                    if (s.Value.AntiSides[i] == side)
+                                        Anti = true;
                                     Match = true;
-                                    switch (i) //top,down,left,right
-                                    {
-                                        case 0://top
-                                            s.Value.Turn();
-                                            s.Value.Turn();
-                                            s.Value.Turn();
-                                            break;
-                                        case 1://down
-                                            s.Value.Turn();
-                                            break;
-                                        case 2://left
-                                            s.Value.Turn();
-                                            break;
-                                        case 3://right
-                                            s.Value.Turn();
-                                            s.Value.Turn();
-                                            break;
-                                        default:
-                                            break;
-                                    }
+                                    if (n == 0)
+                                        switch (i) //right,down,left,upp
+                                        {
+                                            case 0://top
+                                                s.Value.Turn();
+                                                s.Value.Turn();
+                                                s.Value.Turn();
+                                                break;
+                                            case 1://down
+                                                s.Value.Turn();
+                                                break;
+                                            case 2://left
+                                                break;
+                                            case 3://right
+                                                s.Value.Turn();
+                                                s.Value.Turn();
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    if (n == 1)
+                                        switch (i)//right,down,left,upp
+                                        {
+                                            case 0://top
+                                                break;
+                                            case 1://down
+                                                s.Value.Turn();
+                                                s.Value.Turn();
+                                                break;
+                                            case 2://left
+                                                s.Value.Turn();
+                                                break;
+                                            case 3://right
+                                                s.Value.Turn();
+                                                s.Value.Turn();
+                                                s.Value.Turn();
+                                                break;
+                                            default:
+                                                break;
+                                        }
                                 }
-                                if (s.Value.AntiSides[i] == side)
+                                if (Anti)
                                 {
                                     s.Value.InvertY();
                                 }
@@ -181,12 +180,18 @@ namespace Advent2020
                 }
                 Squares = new Dictionary<int, Square>(Next);
             }
-            return ReturnValue.ToString();
+            string SeaString = "";
+            foreach (List<char> l in Sea)
+            {
+                SeaString += new string(l.ToArray()) + "\r\n";
+            }
+            return SeaString;
+            //return ReturnValue.ToString();
         }
     }
     public class Square
     {
-        public List<int> Sides; //top,down,left,right
+        public List<int> Sides; //right,down,left,upp
         public List<int> AntiSides;
         public int MatchRight;
         public bool InvertRight;
@@ -210,8 +215,6 @@ namespace Advent2020
                     Content[x - 1, y - 1] = splitted[y][x];
                 }
             }
-            SideStrings.Add(splitted[0]);
-            SideStrings.Add(splitted.Last());
             string l = "";
             string r = "";
             foreach (string s in splitted)
@@ -219,8 +222,10 @@ namespace Advent2020
                 l += s[0];
                 r += s.Last();
             }
-            SideStrings.Add(l);
             SideStrings.Add(r);
+            SideStrings.Add(splitted.Last());
+            SideStrings.Add(l);
+            SideStrings.Add(splitted[0]); //right,down,left,upp
             foreach (string s in SideStrings)
             {
                 Sides.Add(Convert.ToInt32(s, 2));
@@ -267,7 +272,7 @@ namespace Advent2020
             {
                 for (int x = 0; x < Size; x++)
                 {
-                    New[x, y] = Content[Size - x, y];
+                    New[x, y] = Content[Size - (x + 1), y];
                 }
             }
             Content = New;
@@ -295,7 +300,7 @@ namespace Advent2020
             {
                 for (int x = 0; x < Size; x++)
                 {
-                    New[x, y] = Content[x, Size - y];
+                    New[x, y] = Content[x, Size - (y + 1)];
                 }
             }
             Content = New;
