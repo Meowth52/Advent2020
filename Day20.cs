@@ -72,16 +72,18 @@ namespace Advent2020
                 if (Corners[Current.Key][i])
                     Directions.Add(i);
             }
-            for (int i = Directions[0]; i > 0; i--) //right,down,left,upp               Keep replacing the switches with something like this
+            for (int i = Directions[0]; i > 0; i--) //right,down,left,upp
             {
                 Squares[Current.Key].Turn();
             }
-            Directions = new List<int> { 3, 1 };
+            if (Directions[1] == 3)
+                Squares[Current.Key].InvertY();
             int Shore = 0;
             int SquaresMatched = 0;
             int ContentLenght = Current.Value.Content.GetLength(0);
             while (true)
             {
+                KeyValuePair<int, Square> FirstInRow = new KeyValuePair<int, Square>(Current.Key, Current.Value);
                 for (int i = 0; i < ContentLenght; i++)
                 {
                     if (Sea.Count <= Shore + i)
@@ -93,7 +95,7 @@ namespace Advent2020
                 bool Match = false;
                 for (int n = 0; n < 2; n++)
                 {
-                    int side = Current.Value.Sides[Directions[n]];
+                    int side = n;
                     foreach (KeyValuePair<int, Square> s in Squares)
                     {
                         if (s.Key != Current.Key)
@@ -107,45 +109,26 @@ namespace Advent2020
                                         Anti = true;
                                     Match = true;
                                     if (n == 0)
-                                        switch (i) //right,down,left,upp
+                                    {
+                                        int b = i + 2;
+                                        if (b > 3)
+                                            b -= 4;
+                                        for (int k = b; k > 0; k--) //right,down,left,upp
                                         {
-                                            case 0://top
-                                                s.Value.Turn();
-                                                s.Value.Turn();
-                                                s.Value.Turn();
-                                                break;
-                                            case 1://down
-                                                s.Value.Turn();
-                                                break;
-                                            case 2://left
-                                                break;
-                                            case 3://right
-                                                s.Value.Turn();
-                                                s.Value.Turn();
-                                                break;
-                                            default:
-                                                break;
+                                            Squares[Current.Key].Turn();
                                         }
+                                    }
                                     if (n == 1)
-                                        switch (i)//right,down,left,upp
+                                    {
+                                        int b = i + 3;
+                                        if (b > 3)
+                                            b -= 4;
+                                        for (int k = b; k > 0; k--) //right,down,left,upp
                                         {
-                                            case 0://top
-                                                break;
-                                            case 1://down
-                                                s.Value.Turn();
-                                                s.Value.Turn();
-                                                break;
-                                            case 2://left
-                                                s.Value.Turn();
-                                                break;
-                                            case 3://right
-                                                s.Value.Turn();
-                                                s.Value.Turn();
-                                                s.Value.Turn();
-                                                break;
-                                            default:
-                                                break;
+                                            Squares[Current.Key].Turn();
                                         }
+                                        FirstInRow = new KeyValuePair<int, Square>(s.Key, s.Value);
+                                    }
                                 }
                                 if (Anti)
                                 {
@@ -165,7 +148,8 @@ namespace Advent2020
                     }
                     if (Match)
                         break;
-
+                    if (n == 0)
+                        Current = new KeyValuePair<int, Square>(FirstInRow.Key, FirstInRow.Value);
                 }
                 if (!Match)
                 {
