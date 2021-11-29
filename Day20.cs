@@ -164,7 +164,7 @@ namespace Advent2020
                 }
                 Squares = new Dictionary<int, Square>(Next);
             }
-            string SeaString = "";
+            string SeaString = "\r\n";
             foreach (List<char> l in Sea)
             {
                 SeaString += new string(l.ToArray()) + "\r\n";
@@ -196,7 +196,7 @@ namespace Advent2020
             {
                 for (int x = 1; x < splitted.Length - 1; x++)
                 {
-                    Content[x - 1, y - 1] = splitted[y][x];
+                    Content[x - 1, y - 1] = splitted[Size - x][Size - y];
                 }
             }
             string l = "";
@@ -256,7 +256,7 @@ namespace Advent2020
             {
                 for (int x = 0; x < Size; x++)
                 {
-                    New[x, y] = Content[Size - (x + 1), y];
+                    New[x, y] = Content[x, Size - (y + 1)];
                 }
             }
             Content = New;
@@ -284,7 +284,7 @@ namespace Advent2020
             {
                 for (int x = 0; x < Size; x++)
                 {
-                    New[x, y] = Content[x, Size - (y + 1)];
+                    New[x, y] = Content[Size - (x + 1), y];
                 }
             }
             Content = New;
