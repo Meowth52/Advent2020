@@ -95,7 +95,7 @@ namespace Advent2020
                 bool Match = false;
                 for (int n = 0; n < 2; n++)
                 {
-                    int side = n;
+                    int side = Current.Value.Sides[n];
                     foreach (KeyValuePair<int, Square> s in Squares)
                     {
                         if (s.Key != Current.Key)
@@ -125,7 +125,7 @@ namespace Advent2020
                                             b -= 4;
                                         for (int k = b; k > 0; k--) //right,down,left,upp
                                         {
-                                            Squares[Current.Key].Turn();
+                                            Squares[Current.Key].Turn(); // Save the square to return to. 
                                         }
                                         FirstInRow = new KeyValuePair<int, Square>(s.Key, s.Value);
                                     }
@@ -235,17 +235,17 @@ namespace Advent2020
             Content = New;
             List<int> NewSides = new List<int>()
             {
-                Sides[2],
-                AntiSides[0],
                 Sides[3],
-                AntiSides[1]
-            }; //top,down,left,right
+                AntiSides[0],
+                Sides[1],
+                AntiSides[2]
+            }; //right,down,left,top
             List<int> NewAntiSides = new List<int>()
             {
-                AntiSides[2],
-                Sides[0],
                 AntiSides[3],
-                Sides[1]
+                Sides[0],
+                AntiSides[1],
+                Sides[2]
             };
             Sides = new List<int>(NewSides);
             AntiSides = new List<int>(NewAntiSides);
@@ -263,11 +263,11 @@ namespace Advent2020
             Content = New;
             List<int> NewSides = new List<int>()
             {
-                AntiSides[0],
+                Sides[2],
                 AntiSides[1],
-                Sides[3],
-                Sides[2]
-            }; //top,down,left,right
+                Sides[0],
+                AntiSides[3]
+            };  //right,down,left,top
             List<int> NewAntiSides = new List<int>()
             {
                 Sides[0],
@@ -291,17 +291,17 @@ namespace Advent2020
             Content = New;
             List<int> NewSides = new List<int>()
             {
-                Sides[1],
-                Sides[0],
+                AntiSides[0],
+                Sides[3],
                 AntiSides[2],
-                AntiSides[3]
-            }; //top,down,left,right
+                Sides[1]
+            }; //right,down,left,top
             List<int> NewAntiSides = new List<int>()
             {
-                AntiSides[1],
-                AntiSides[0],
+                Sides[0],
+                AntiSides[3],
                 Sides[2],
-                Sides[3]
+                AntiSides[1]
             };
             Sides = new List<int>(NewSides);
             AntiSides = new List<int>(NewAntiSides);
