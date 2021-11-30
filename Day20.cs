@@ -169,6 +169,7 @@ namespace Advent2020
             {
                 SeaString += new string(l.ToArray()) + "\r\n";
             }
+
             return SeaString;
             //return ReturnValue.ToString();
         }
@@ -196,7 +197,7 @@ namespace Advent2020
             {
                 for (int x = 1; x < splitted.Length - 1; x++)
                 {
-                    Content[x - 1, y - 1] = splitted[Size - x][Size - y];
+                    Content[x - 1, y - 1] = splitted[x][y];
                 }
             }
             string l = "";
