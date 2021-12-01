@@ -81,9 +81,9 @@ namespace Advent2020
             int Shore = 0;
             int SquaresMatched = 0;
             int ContentLenght = Current.Value.Content.GetLength(0);
+            KeyValuePair<int, Square> FirstInRow = new KeyValuePair<int, Square>(Current.Key, Current.Value);
             while (true)
             {
-                KeyValuePair<int, Square> FirstInRow = new KeyValuePair<int, Square>(Current.Key, Current.Value);
                 for (int i = 0; i < ContentLenght; i++)
                 {
                     if (Sea.Count <= Shore + i)
@@ -95,7 +95,9 @@ namespace Advent2020
                 bool Match = false;
                 for (int n = 0; n < 2; n++)
                 {
-                    int side = Current.Value.Sides[n];
+                    int side = Current.Value.Sides[0];
+                    if (n == 1)
+                        side = FirstInRow.Value.Sides[1];
                     foreach (KeyValuePair<int, Square> s in Squares)
                     {
                         if (s.Key != Current.Key)
@@ -115,7 +117,11 @@ namespace Advent2020
                                             b -= 4;
                                         for (int k = b; k > 0; k--) //right,down,left,upp
                                         {
-                                            Squares[Current.Key].Turn();
+                                            s.Value.Turn();
+                                        }
+                                        if (Anti)
+                                        {
+                                            s.Value.InvertY();
                                         }
                                     }
                                     if (n == 1)
@@ -125,14 +131,15 @@ namespace Advent2020
                                             b -= 4;
                                         for (int k = b; k > 0; k--) //right,down,left,upp
                                         {
-                                            Squares[Current.Key].Turn(); // Save the square to return to. 
+                                            s.Value.Turn(); // Save the square to return to. 
+                                        }
+                                        s.Value.InvertY();
+                                        if (Anti)
+                                        {
+                                            s.Value.InvertX();
                                         }
                                         FirstInRow = new KeyValuePair<int, Square>(s.Key, s.Value);
                                     }
-                                }
-                                if (Anti)
-                                {
-                                    s.Value.InvertY();
                                 }
                             }
                         }
